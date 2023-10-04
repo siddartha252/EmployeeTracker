@@ -62,7 +62,7 @@
             navigator.geolocation.getCurrentPosition(function(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                geoLocationField.value = `Lat: ${latitude}, Long: ${longitude}`;
+                geoLocationField.value = `${latitude}, ${longitude}`;
             });
 
             // Access the user's camera
@@ -96,7 +96,7 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         const latitude = position.coords.latitude;
                         const longitude = position.coords.longitude;
-                        geoLocationField.value = `Lat: ${latitude}, Long: ${longitude}`;
+                        geoLocationField.value = `${latitude}, ${longitude}`;
                     });
                 }
 
