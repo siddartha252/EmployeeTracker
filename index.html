@@ -11,7 +11,6 @@
 <body>
     <div class="employee-form">
         <h2>Check-in / Check-out</h2>
-        <p id="confirmation-message" style="display:none;"></p>
         <form id="employee-form">
             <label for="employeeCode">Employee Code:</label>
             <select id="employeeCode" name="employeeCode" required>
@@ -19,11 +18,8 @@
             </select>
 
             <label for="employeeName">Employee Name:</label>
-            <select id="employeeName" name="employeeName" list="employeeName"  required> 
-                <datalist id="employeeName"class = "employeeName" ></datalist>    
-            </select>
-            <!-- Note: Removed class attribute from datalist -->
-            
+            <input type= "text" id="employeeName" name="employeeName" list="employeeName" readonly> 
+            <datalist id="employeeName"class = "employeeName" ></datalist>
 
             <label for="date">Date:</label>
             <input type="text" id="date" name="date" readonly><br>
@@ -34,6 +30,7 @@
             <video id="camera-stream" autoplay style="width: 100%; max-width: 400px;"></video><br>
 
             <button id="submit-button" type="button">Capture Image and Submit</button><br>
+            <p id="confirmation-message" style="display:none;"></p>
 
             <canvas id="image-canvas" width="250" height="150" style="display:none;"></canvas>
             <input type="hidden" id="captured-image" name="image">
@@ -49,22 +46,23 @@
             const captureButton = document.getElementById('submit-button');
             const imageCanvas = document.getElementById('image-canvas');
             const capturedImageInput = document.getElementById('captured-image');
-            const employeeNameInput = document.getElementById('employeeName'); // Add this line
+            const employeeNameInput = document.getElementById('employeeName');
+            const employeeCodeInput = document.getElementById('employeeCode');
             const employeeForm = document.getElementById('employee-form');
             const confirmationMessage = document.getElementById('confirmation-message');
             const resetButton = document.getElementById('reset-button');
-
+    
             // Automatically set today's date
             const today = new Date();
             dateField.value = today.toISOString().split('T')[0];
-
+    
             // Automatically capture geo-location
             navigator.geolocation.getCurrentPosition(function(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
                 geoLocationField.value = `${latitude}, ${longitude}`;
             });
-
+    
             // Access the user's camera
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(stream) {
@@ -74,23 +72,23 @@
                 .catch(function(error) {
                     console.error('Error accessing camera:', error);
                 });
-
+    
             // Capture an image from the camera and submit the form using AJAX
             captureButton.addEventListener('click', function() {
                 const cameraStream = document.getElementById('camera-stream');
                 const context = imageCanvas.getContext('2d');
-
+    
                 // Set the canvas dimensions to match the video element
                 imageCanvas.width = cameraStream.videoWidth;
                 imageCanvas.height = cameraStream.videoHeight;
-
+    
                 // Draw the captured image onto the canvas
                 context.drawImage(cameraStream, 0, 0, imageCanvas.width, imageCanvas.height);
-
+    
                 // Convert the resized image to base64
                 const resizedImageData = imageCanvas.toDataURL('image/jpeg');
                 capturedImageInput.value = resizedImageData;
-
+    
                 // Automatically capture geo-location if not captured already
                 if (!geoLocationField.value) {
                     navigator.geolocation.getCurrentPosition(function(position) {
@@ -99,16 +97,16 @@
                         geoLocationField.value = `${latitude}, ${longitude}`;
                     });
                 }
-
+    
                 // Automatically set today's date if not set already
                 if (!dateField.value) {
                     const today = new Date();
                     dateField.value = today.toISOString().split('T')[0];
                 }
-
+    
                 // Create a FormData object to send the form data
                 const formData = new FormData(employeeForm);
-
+    
                 // Send the form data to the Apps Script using AJAX
                 fetch('https://script.google.com/macros/s/AKfycbxtMe0qLfHKU8j9ds6V9b7RtxUqYMAViYw47men0oIKIQwvWQUDyWzrJVSPnD-ARjJD/exec', {
                     method: 'POST',
@@ -119,26 +117,44 @@
                     // Display confirmation message
                     confirmationMessage.innerText = `${employeeNameInput.value}, you have Punched In Successfully`;
                     confirmationMessage.style.display = 'block';
-
+    
                     // Reset the form
                     employeeForm.reset();
-                    // Reload the form after a 3-second delay
-        setTimeout(function() {
-            location.reload();
-        }, 3000);
+                    // Disable the submit button
+                    captureButton.disabled = true;
                 })
                 .catch(error => {
                     console.error('Error submitting form:', error);
                 });
             });
-
+    
             // Add an event listener to the Reset button to clear form fields and hide the confirmation message
             resetButton.addEventListener('click', function() {
                 employeeForm.reset();
                 confirmationMessage.style.display = 'none';
+                // Enable the submit button
+                captureButton.disabled = false;
             });
+                 // Add an event listener to the employeeCode select element
+employeeCodeInput.addEventListener('change', function() {
+    // Get the selected employee code
+    const selectedEmployeeCode = employeeCodeInput.value;
+    
+    // Find the corresponding employee name in the employeeName select element
+        const datalistOptions = document.querySelectorAll('#employeeName option');
+        const codeOptions = document.querySelectorAll('#employeeCode option');
+
+    for (let i = 0; i < datalistOptions.length; i++) {
+        if (codeOptions[i].value === selectedEmployeeCode) {
+                        // Set the employeeName input element's value to the corresponding employee name
+                        employeeNameInput.value = datalistOptions[i].text;
+                        break;
+       }
+    }
+});
         });
-        
+   
+
     </script>
 </body>
 </html>
