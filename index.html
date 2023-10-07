@@ -18,7 +18,7 @@
             </select>
 
             <label for="employeeName">Employee Name:</label>
-            <input type= "text" id="employeeName" name="employeeName" list="employeeName" readonly> 
+            <input type= "text" id="employeeName" name="employeeName" list="employeeName" readonly required> 
             <datalist id="employeeName"class = "employeeName" ></datalist>
 
             <label for="date">Date:</label>
@@ -51,11 +51,34 @@
             const employeeForm = document.getElementById('employee-form');
             const confirmationMessage = document.getElementById('confirmation-message');
             const resetButton = document.getElementById('reset-button');
+   
+                          // Add an event listener to the employeeCode select element
+employeeCodeInput.addEventListener('change', function() {
+    // Get the selected employee code
+    const selectedEmployeeCode = employeeCodeInput.value;
     
+    // Find the corresponding employee name in the employeeName select element
+        const datalistOptions = document.querySelectorAll('#employeeName option');
+        const codeOptions = document.querySelectorAll('#employeeCode option');
+
+    for (let i = 0; i < datalistOptions.length; i++) {
+        if (codeOptions[i].value === selectedEmployeeCode) {
+                        // Set the employeeName input element's value to the corresponding employee name
+                        employeeNameInput.value = datalistOptions[i].text;
+                        break;
+       }
+    }
+});
             // Automatically set today's date
-            const today = new Date();
-            dateField.value = today.toISOString().split('T')[0];
+           // const today = new Date();
+            //dateField.value = today.toISOString().split('T')[0];
     
+            // Set today's date
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    dateField.value = `${year}-${month}-${day}`;
             // Automatically capture geo-location
             navigator.geolocation.getCurrentPosition(function(position) {
                 const latitude = position.coords.latitude;
@@ -135,23 +158,8 @@
                 // Enable the submit button
                 captureButton.disabled = false;
             });
-                 // Add an event listener to the employeeCode select element
-employeeCodeInput.addEventListener('change', function() {
-    // Get the selected employee code
-    const selectedEmployeeCode = employeeCodeInput.value;
-    
-    // Find the corresponding employee name in the employeeName select element
-        const datalistOptions = document.querySelectorAll('#employeeName option');
-        const codeOptions = document.querySelectorAll('#employeeCode option');
+   
 
-    for (let i = 0; i < datalistOptions.length; i++) {
-        if (codeOptions[i].value === selectedEmployeeCode) {
-                        // Set the employeeName input element's value to the corresponding employee name
-                        employeeNameInput.value = datalistOptions[i].text;
-                        break;
-       }
-    }
-});
         });
    
 
