@@ -43,6 +43,7 @@ body {
 
 .login-form h2, .signup-form h2 {
     color: #333;
+    margin:0 auto;
     margin-bottom: 8%;
     font-family: "Fredoka One", cursive;
     color: #0583D2;
