@@ -25,3 +25,111 @@ input, button {
     display: none;
 }
 
+/* Existing CSS for login and sign-up forms */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f1f1f1;
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-form h2, .signup-form h2 {
+    color: #333;
+    margin-bottom: 8%;
+    font-family: "Fredoka One", cursive;
+    color: #0583D2;
+    letter-spacing: 0.1em;
+}
+
+.login-form label, .signup-form label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.login-form input, .signup-form input {
+    width: 80%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.login-form .signin-button, .signup-form .signup-button {
+    background-color: #0583D2;
+    color: white;
+    border: none;
+    padding: 3%;
+    width: 100%;
+    font-weight: bold;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.login-form .signin-button:hover, .signup-form .signup-button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+/* Additional styles for the login and sign-up forms */
+.login-container, .signup-container {
+    background-color: white;
+    padding: 7%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    /* horizontal align */
+    width: 40vw;
+    margin-left: 30vw;
+    /* vertical align */
+    height: 70vh;
+    margin-top: 15vh;
+}
+
+#submit, #create-acct-btn {
+    background-color: #0583D2;
+    color: white;
+    border: none;
+    margin-top: 5%;
+}
+
+button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+#sign-up {
+    border: none;
+    display: none;
+}
+
+#return-btn {
+    background: none;
+    color: grey;
+    text-decoration: underline;
+    border: none;
+    margin-top: 3%;
+}
+
+.login-form p, .signup-form p {
+    width: 100%;
+    text-align: center;
+    line-height: 0.1em;
+    margin-top: 5%;
+    margin-bottom: 5%; /* Move the margin to the bottom */
+    border-top: 1px solid #000; /* Move the border to the top */
+}
+
+.login-form p span, .signup-form p span {
+    background: #fff;
+    padding: 0 10px;
+}

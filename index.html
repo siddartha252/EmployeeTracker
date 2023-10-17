@@ -1,168 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="data.js"></script>
-    <title>Employee Management</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <div class="employee-form">
-        <h2>Check-in / Check-out</h2>
-        <form id="employee-form">
-            <label for="employeeCode">Employee Code:</label>
-            <select id="employeeCode" name="employeeCode" required>
-                <datalist id="employeeCode" class="employeeCode"> </datalist>
-            </select>
-
-            <label for="employeeName">Employee Name:</label>
-            <input type= "text" id="employeeName" name="employeeName" list="employeeName" readonly required> 
-            <datalist id="employeeName"class = "employeeName" ></datalist>
-
-            <label for="date">Date:</label>
-            <input type="text" id="date" name="date" readonly><br>
-
-            <label for="geoLocation">Geo Location:</label>
-            <input type="text" id="geoLocation" name="geoLocation" readonly><br>
-
-            <video id="camera-stream" autoplay style="width: 100%; max-width: 400px;"></video><br>
-
-            <button id="submit-button" type="button">Capture Image and Submit</button><br>
-            <p id="confirmation-message" style="display:none;"></p>
-
-            <canvas id="image-canvas" width="250" height="150" style="display:none;"></canvas>
-            <input type="hidden" id="captured-image" name="image">
-            <button id="reset-button" type="button">Reset Form</button><br>
-        </form>
+    <div class="container">
+        <form class="login-form"  id="login-form" >
+            <h2>Login</h2>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" placeholder="Enter your email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="submit" id = "signIn" class="signin-button">Sign In</button>
+            <label for="rememberMe">Remember Me
+                <input type="checkbox" id="rememberMe" name="rememberMe">
+            </label>
+             </form>
+        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateField = document.getElementById('date');
-            const geoLocationField = document.getElementById('geoLocation');
-            const captureButton = document.getElementById('submit-button');
-            const imageCanvas = document.getElementById('image-canvas');
-            const capturedImageInput = document.getElementById('captured-image');
-            const employeeNameInput = document.getElementById('employeeName');
-            const employeeCodeInput = document.getElementById('employeeCode');
-            const employeeForm = document.getElementById('employee-form');
-            const confirmationMessage = document.getElementById('confirmation-message');
-            const resetButton = document.getElementById('reset-button');
-   
-                          // Add an event listener to the employeeCode select element
-employeeCodeInput.addEventListener('change', function() {
-    // Get the selected employee code
-    const selectedEmployeeCode = employeeCodeInput.value;
-    
-    // Find the corresponding employee name in the employeeName select element
-        const datalistOptions = document.querySelectorAll('#employeeName option');
-        const codeOptions = document.querySelectorAll('#employeeCode option');
-
-    for (let i = 0; i < datalistOptions.length; i++) {
-        if (codeOptions[i].value === selectedEmployeeCode) {
-                        // Set the employeeName input element's value to the corresponding employee name
-                        employeeNameInput.value = datalistOptions[i].text;
-                        break;
-       }
-    }
-});
-            // Automatically set today's date
-           // const today = new Date();
-            //dateField.value = today.toISOString().split('T')[0];
-    
-            // Set today's date
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    dateField.value = `${year}-${month}-${day}`;
-            // Automatically capture geo-location
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                geoLocationField.value = `${latitude}, ${longitude}`;
-            });
-    
-            // Access the user's camera
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    const cameraStream = document.getElementById('camera-stream');
-                    cameraStream.srcObject = stream;
-                })
-                .catch(function(error) {
-                    console.error('Error accessing camera:', error);
-                });
-    
-            // Capture an image from the camera and submit the form using AJAX
-            captureButton.addEventListener('click', function() {
-                const cameraStream = document.getElementById('camera-stream');
-                const context = imageCanvas.getContext('2d');
-    
-                // Set the canvas dimensions to match the video element
-                imageCanvas.width = cameraStream.videoWidth;
-                imageCanvas.height = cameraStream.videoHeight;
-    
-                // Draw the captured image onto the canvas
-                context.drawImage(cameraStream, 0, 0, imageCanvas.width, imageCanvas.height);
-    
-                // Convert the resized image to base64
-                const resizedImageData = imageCanvas.toDataURL('image/jpeg');
-                capturedImageInput.value = resizedImageData;
-    
-                // Automatically capture geo-location if not captured already
-                if (!geoLocationField.value) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
-                        geoLocationField.value = `${latitude}, ${longitude}`;
-                    });
-                }
-    
-                // Automatically set today's date if not set already
-                if (!dateField.value) {
-                    const today = new Date();
-                    dateField.value = today.toISOString().split('T')[0];
-                }
-    
-                // Create a FormData object to send the form data
-                const formData = new FormData(employeeForm);
-    
-                // Send the form data to the Apps Script using AJAX
-                fetch('https://script.google.com/macros/s/AKfycbxtMe0qLfHKU8j9ds6V9b7RtxUqYMAViYw47men0oIKIQwvWQUDyWzrJVSPnD-ARjJD/exec', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(data => {
-                    // Display confirmation message
-                    confirmationMessage.innerText = `${employeeNameInput.value}, you have Punched In Successfully`;
-                    confirmationMessage.style.display = 'block';
-    
-                    // Reset the form
-                    employeeForm.reset();
-                    // Disable the submit button
-                    captureButton.disabled = true;
-                })
-                .catch(error => {
-                    console.error('Error submitting form:', error);
-                });
-            });
-    
-            // Add an event listener to the Reset button to clear form fields and hide the confirmation message
-            resetButton.addEventListener('click', function() {
-                employeeForm.reset();
-                confirmationMessage.style.display = 'none';
-                // Enable the submit button
-                captureButton.disabled = false;
-            });
-   
-
-        });
-   
-
-    </script>
 </body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQ3bIbc8Q16MU8207Uh343dxROgm2GO3Q",
+      authDomain: "employeelogin-8c455.firebaseapp.com",
+      databaseURL: "https://employeelogin-8c455-default-rtdb.firebaseio.com",
+      projectId: "employeelogin-8c455",
+      storageBucket: "employeelogin-8c455.appspot.com",
+      messagingSenderId: "586868332884",
+      appId: "1:586868332884:web:62cf5fc02b87195e77d0c1"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    const loginForm = document.getElementById("login-form");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const rememberMeCheckbox = document.getElementById("rememberMe");
+
+// Check if there are saved credentials in localStorage
+const savedEmail = localStorage.getItem("savedEmail");
+const savedPassword = localStorage.getItem("savedPassword");
+
+if (savedEmail && savedPassword) {
+    emailInput.value = savedEmail;
+    passwordInput.value = savedPassword;
+    rememberMeCheckbox.checked = true;
+}
+
+loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    if (rememberMeCheckbox.checked) {
+        // Save the email and password to localStorage if "Remember Me" is checked
+        localStorage.setItem("savedEmail", email);
+        localStorage.setItem("savedPassword", password);
+    } else {
+        // Remove the saved email and password if "Remember Me" is not checked
+        localStorage.removeItem("savedEmail");
+        localStorage.removeItem("savedPassword");
+    }
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // User signed in successfully
+            const user = userCredential.user;
+            console.log("User signed in:", user);
+            // Redirect to the user's dashboard or another page.
+            window.alert("Signed in !!");
+            window.location.href = "form.html";
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error("Error:", errorCode, errorMessage);
+            // Show an error message to the user.
+            window.alert("Sign-in failed. " + errorMessage);
+        });
+});
+
+
+  </script>
 </html>
