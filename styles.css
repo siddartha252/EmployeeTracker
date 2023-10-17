@@ -111,6 +111,17 @@ button:hover {
     border: none;
     display: none;
 }
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%; /* Take up full width on smaller screens */
+    }
+
+    .login-form, .signup-form {
+        width: 80%; /* Adjust the width for mobile view */
+        margin: 0 auto; /* Center the forms */
+    }
+}
 
 #return-btn {
     background: none;
