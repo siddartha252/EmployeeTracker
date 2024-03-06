@@ -1,3 +1,6 @@
+document.oncontextmenu = () =>{
+    return false
+}
 $(document).ready(function () {
     FillDataList();
      populateEmployeeIdDropdown(); // Uncomment this function call
